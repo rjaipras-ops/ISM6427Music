@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ISM6427 Music Studio</title>
+  <meta name="description" content="Generate songs with AI using SunoAPI.org." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">♪</span>
+      <div>
+        <h1>Music Studio</h1>
+        <p class="sub">ISM6427 · AI song generation</p>
+      </div>
+    </div>
+    <div class="credits" id="credits" title="Remaining SunoAPI credits">Credits: …</div>
+  </header>
+
+  <main>
+    <section class="card" id="lock" hidden>
+      <h2>Enter app password</h2>
+      <p class="hint">This site is protected so only you can spend its credits.</p>
+      <form id="lockForm" class="row">
+        <input type="password" id="pw" placeholder="Password" autocomplete="current-password" required />
+        <button type="submit">Unlock</button>
+      </form>
+    </section>
+
+    <section class="card" id="studio">
+      <div class="tabs" role="tablist">
+        <button role="tab" class="tab active" data-mode="simple" aria-selected="true">Simple</button>
+        <button role="tab" class="tab" data-mode="custom" aria-selected="false">Custom</button>
+      </div>
+
+      <form id="genForm">
+        <!-- Simple mode -->
+        <div class="mode" data-for="simple">
+          <label for="prompt">Describe your song</label>
+          <textarea id="prompt" maxlength="3000" rows="4"
+            placeholder="An upbeat indie pop song about finishing a semester project at 3am"></textarea>
+          <p class="hint">Suno writes the lyrics for you. <span class="count" data-count="prompt"></span></p>
+        </div>
+
+        <!-- Custom mode -->
+        <div class="mode" data-for="custom" hidden>
+          <label for="title">Title</label>
+          <input id="title" maxlength="80" placeholder="Midnight Deadline" />
+
+          <div class="lyrics-head">
+            <label for="lyrics">Lyrics</label>
+            <button type="button" class="ghost small" id="lyricsBtn">✨ Write lyrics for me</button>
+          </div>
+          <textarea id="lyrics" maxlength="5000" rows="8"
+            placeholder="[Verse]&#10;Coffee's cold and the cursor blinks&#10;&#10;[Chorus]&#10;..."></textarea>
+          <p class="hint"><span class="count" data-count="lyrics"></span></p>
+
+          <label for="negativeTags">Avoid (styles or traits)</label>
+          <input id="negativeTags" maxlength="1000" placeholder="heavy metal, autotune" />
+
+          <div class="grid">
+            <div>
+              <label for="vocalGender">Vocals</label>
+              <select id="vocalGender">
+                <option value="">Any</option>
+                <option value="f">Female</option>
+                <option value="m">Male</option>
+              </select>
+            </div>
+            <div>
+              <label for="duration">Length (sec)</label>
+              <input id="duration" type="number" min="10" max="360" placeholder="auto" />
+            </div>
+            <div>
+              <label for="variety">Variety</label>
+              <select id="variety">
+                <option value="0">0 · Exact</option>
+                <option value="1" selected>1 · Normal</option>
+                <option value="2">2 · High</option>
+                <option value="3">3 · Extra</option>
+                <option value="4">4 · Max</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid two">
+            <div>
+              <label for="styleWeight">Style adherence <output id="styleWeightOut">0.50</output></label>
+              <input id="styleWeight" type="range" min="0" max="1" step="0.05" value="0.5" />
+            </div>
+            <div>
+              <label for="weirdness">Weirdness <output id="weirdnessOut">0.50</output></label>
+              <input id="weirdness" type="range" min="0" max="1" step="0.05" value="0.5" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Shared -->
+        <label for="style">Style / genre <span class="muted">(required)</span></label>
+        <input id="style" maxlength="1000" placeholder="indie pop, bright synths, 120 bpm" />
+
+        <div class="grid two">
+          <div>
+            <label for="model">Model</label>
+            <select id="model">
+              <option value="V6" selected>V6 · Best quality</option>
+              <option value="V6_WILD">V6 Wild · Bolder</option>
+              <option value="V6_MINI">V6 Mini · Faster</option>
+            </select>
+          </div>
+          <label class="check">
+            <input type="checkbox" id="instrumental" />
+            Instrumental (no vocals)
+          </label>
+        </div>
+
+        <button type="submit" class="primary" id="genBtn">Generate song</button>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="results"></section>
+
+    <section class="card" id="historyCard" hidden>
+      <div class="lyrics-head">
+        <h2>Recent tasks</h2>
+        <button type="button" class="ghost small" id="clearHistory">Clear</button>
+      </div>
+      <ul id="history"></ul>
+      <p class="hint">Suno keeps generated files for about 14 days. Download anything you want to keep.</p>
+    </section>
+  </main>
+
+  <footer>Powered by SunoAPI.org · Your API key stays on the server.</footer>
+  <script src="app.js"></script>
+</body>
+</html>
